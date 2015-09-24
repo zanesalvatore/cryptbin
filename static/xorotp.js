@@ -181,5 +181,17 @@
 		var plaintext = exports.xorByteArrays(key, ciphertext);
 		return exports.bytesToUtf8(plaintext);
 	};
+
+	/**
+	 * Even nicer wrapper that handles key generation and returns the key and 
+	 * ciphertext.
+	 */
+	exports.doEncrypt = function(utf8Plaintext) {
+		var plaintext = exports.utf8ToBytes(utf8Plaintext);
+		var key = exports.randomByteArray(plaintext.length);
+		var base64Key = exports.bytesToBase64(key);
+		var ciphertext = exports.xorByteArrays(key, plaintext);
+		return {"ciphertext": ciphertext, "key": base64Key};
+	};
 	
 })(typeof exports === 'undefined' ? this.xorotp = {} : exports);

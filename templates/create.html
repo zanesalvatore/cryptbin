@@ -8,29 +8,54 @@
             <a href="https://en.wikipedia.org/wiki/One-time_pad">one-time pad</a> implementation.</p>
     <form method="post">
         <div class="form-group">
-            <label for="pasteContents">Paste Here:</label>
-            <textarea name="pasteContents" id="pasteContents" rows="10" class="form-control"></textarea>
+            <label for="paste-contents">Paste Here:</label>
+            <textarea name="paste-contents" id="paste-contents" rows="10" class="form-control"></textarea>
         </div>
-        <a href="#" class="btn btn-default" id="submit-paste">Encrypt and Submit</a>
+        <button class="btn btn-default" id="submit-paste">Encrypt and Submit</button>
     </form>
-    <div id="createSuccess hidden">
+    <div id="createSuccess" class="hidden">
         <div class="alert alert-success" role="alert">
             <strong>Sick!</strong> Your paste has been created.
         </div>
         <div class="form-group">
-            <label for="pasteUrl">Share this link:</label>
-            <input type="text" name="pasteUrl" id="pasteUrl" readonly="readonly">
+            <label for="paste-url">Share this link:</label>
+            <input type="text" name="paste-url" id="paste-url" readonly="readonly">
         </div>
     </div>
 {%  endblock %}
 {% block footer %}
     <script>
-        // on submit
-            // generate OTP key
-            // encrypt paste contents
-            // submit encrypted contents to server via AJAX
-            // get URL back
-            // build URL
-            // display URL
+        var key;
+        var submitSuccess = function(data) {
+                // get URL back
+                // display URL
+                var url = data['paste_url'] + '#' + key;
+                $('#paste-url').val(url);
+                $('#createSuccess').removeClass('hidden');
+        };
+
+        $(document).ready(function(){
+            $('#submit-paste').click(function(){
+                $('#submit-paste').prop('disabled', true);  
+                var paste = $('#paste-contents').val();
+
+                if (paste.length < 25) {
+                    alert('Your paste must be at least 25 bytes long.');
+                    return;
+                }
+
+                var encryptResult = xorotp.doEncrypt(paste);
+                var ciphertext = encryptResult.ciphertext;
+                key = encryptResult.key;
+                
+                // submit encrypted contents to server via AJAX
+                $.post({
+                    url: '/submit',
+                    data: {'paste-contents': ciphertext},
+                    success: submitSuccess,
+                    dataType: 'json'
+                });
+            });
+        });
     </script>
 {% endblock %}

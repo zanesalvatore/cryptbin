@@ -49,8 +49,9 @@ def submit():
     :return:
     """
     cur = flask.g.db.cursor()
-    cur.execute('insert into pastes (paste) values (?)',
-                [flask.request.form['pasteContents']])
+    form_data = flask.request.get_json()
+    cur.execute('insert into pastes (paste) values (?)', 
+                [form_data['paste-contents']])
     flask.g.db.commit()
     paste_id = cur.lastrowid
     cur.close()
