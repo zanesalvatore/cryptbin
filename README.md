@@ -1,0 +1,1 @@
+cryptbin0 is a naive encrypted pastebin using client-side JavaScript encryption.

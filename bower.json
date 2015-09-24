@@ -1,0 +1,23 @@
+{
+  "name": "cryptbin0",
+  "version": "0.0.0",
+  "authors": [
+    "Zane Salvatore <me@zanesalvatore.com>"
+  ],
+  "moduleType": [
+    "es6"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "~3.3.5",
+    "bootswatch": "v3.3.5+3",
+    "jquery": "~2.1.4"
+  }
+}

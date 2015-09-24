@@ -1,0 +1,5 @@
+.idea
+.env
+static/components
+cryptbin.db
+__pycache__
