@@ -68,7 +68,7 @@ def post_paste():
     cur.close()
     return flask.jsonify(paste_id=paste_id,
                          paste_url=flask.url_for(
-                             'get_paste', paste_id=paste_id))
+                             'get_paste', paste_id=paste_id, _external=True))
 
 
 @app.route("/p/<int:paste_id>")
