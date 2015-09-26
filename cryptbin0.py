@@ -1,4 +1,5 @@
 import contextlib
+import os.path
 import sqlite3
 import flask
 
@@ -11,6 +12,11 @@ SECRET_KEY = 'xDGUFyWgughlAgT89l3IIepiZDke7HNOY59Az39iPjeWqBsFhSvPKXogMj6R87UyHQ
 
 app = flask.Flask(__name__)
 app.config.from_object(__name__)
+
+
+def on_start():
+    if not os.path.isfile(DATABASE):
+        init_db()
 
 
 def connect_db():
@@ -86,4 +92,5 @@ def get_paste(paste_id):
 
 
 if __name__ == '__main__':
+    on_start()
     app.run()
