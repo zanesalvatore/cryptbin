@@ -72,10 +72,7 @@ def post_paste():
 
 
 @app.route("/p/<int:paste_id>")
-def get_paste(paste_id=None):
-    if paste_id is None:
-        return flask.jsonify(error="Invalid paste ID"), 400
-
+def get_paste(paste_id):
     cur = get_db().execute(
         'select paste from pastes where id = ?', [paste_id])
 
@@ -84,7 +81,8 @@ def get_paste(paste_id=None):
     if paste is None:
         return flask.jsonify(error="Not found"), 404
 
-    return flask.jsonify(paste_id=paste_id, paste=paste[0])
+    # return flask.jsonify(paste_id=paste_id, paste=paste[0])
+    return flask.render_template("view.html", paste_contents=paste[0])
 
 
 if __name__ == '__main__':

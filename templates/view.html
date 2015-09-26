@@ -4,14 +4,12 @@
     <div class="page-header">
         <h1>Paste</h1>
     </div>
-    <textarea name="paste-contents" id="paste-contents" rows="10" class="form-control">
-    {{ paste_contents }}
-    </textarea>
+    <textarea name="paste-contents" id="paste-contents" rows="10" class="form-control">{{ paste_contents }}</textarea>
 {% endblock %}
 {% block footer %}
     <script>
         $(window).load(function(){
-            var base64Key = location.hash;
+            var base64Key = location.hash.substring(1);
             var $pastebox = $("#paste-contents");
             var ciphertext = $pastebox.text();
             var plaintext = xorotp.decrypt(base64Key, ciphertext);
