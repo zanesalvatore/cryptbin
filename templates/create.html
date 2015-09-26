@@ -11,7 +11,7 @@
             <label for="paste-contents">Paste Here:</label>
             <textarea name="paste-contents" id="paste-contents" rows="10" class="form-control"></textarea>
         </div>
-        <button class="btn btn-default" id="submit-paste">Encrypt and Submit</button>
+        <button type="button" class="btn btn-default" id="submit-paste">Encrypt and Submit</button>
     </form>
     <div id="createSuccess" class="hidden">
         <div class="alert alert-success" role="alert">
@@ -25,37 +25,58 @@
 {%  endblock %}
 {% block footer %}
     <script>
-        var key;
-        var submitSuccess = function(data) {
-                // get URL back
-                // display URL
-                var url = data['paste_url'] + '#' + key;
-                $('#paste-url').val(url);
-                $('#createSuccess').removeClass('hidden');
-        };
 
         $(document).ready(function(){
+
             $('#submit-paste').click(function(){
-                $('#submit-paste').prop('disabled', true);  
+
+                $('#submit-paste').prop("disabled", true);
                 var paste = $('#paste-contents').val();
 
                 if (paste.length < 25) {
                     alert('Your paste must be at least 25 bytes long.');
+                    $('#submit-paste').prop("disabled", false);
                     return;
                 }
 
-                var encryptResult = xorotp.doEncrypt(paste);
+                var encryptResult = xorotp.generateKeyAndEncrypt(paste);
                 var ciphertext = encryptResult.ciphertext;
-                key = encryptResult.key;
+                var key = encryptResult.key;
                 
                 // submit encrypted contents to server via AJAX
-                $.post({
-                    url: '/submit',
-                    data: {'paste-contents': ciphertext},
-                    success: submitSuccess,
-                    dataType: 'json'
+                $.ajax({
+                    type: 'POST',
+                    url: '{{ url_for('post_paste') }}',
+                    data: JSON.stringify({'paste-contents': ciphertext}),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: 'json',
+                    success: function(data) {
+                        var url = data['paste_url'] + '#' + key;
+                        $('#paste-url').val(url);
+                        $('#createSuccess').removeClass("hidden");
+                        $('#submit-paste').prop("disabled", false);
+                    },
+                    error: function(xhr, status ,error) {
+                        alert("Error: " + status + " -- " + error);
+                        $('#submit-paste').prop("disabled", false);
+                    }
+                });
+
+                return false;
+
+            });
+
+            $("#paste-url").focus(function(){
+                var $this = $(this);
+                $this.select();
+
+                $this.mouseup(function(){
+                    $this.unbind("mouseup");
+                    return false;
                 });
             });
+
         });
+
     </script>
 {% endblock %}

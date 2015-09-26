@@ -150,7 +150,8 @@
 	};
 	
 	/**
-	 * Nice wrapper for XOR encryption, with error handling.
+	 * Nice wrapper for XOR encryption, with error handling. Accepts Base64
+	 * encoded key and UTF-8 plaintext for convenience.
 	 * @param {string} base64KeyString Base64 encoded key.
 	 * @param {string} utf8Plaintext UTF-8 plaintext string.
 	 * @return {string} Base64 encoded ciphertext.
@@ -168,7 +169,14 @@
 		
 		return exports.bytesToBase64(ciphertext);
 	};
-	
+
+	/**
+	 * Nice wrapper for decryption, with error handling. Accepts Base64 key and
+	 * plaintext for convenience.
+	 * @param base64KeyString
+	 * @param base64Ciphertext
+	 * @returns {string} The decrypted plaintext.
+	 */
 	exports.decrypt = function(base64KeyString, base64Ciphertext) {
 		var key = exports.base64ToBytes(base64KeyString);
 		var ciphertext = exports.base64ToBytes(base64Ciphertext);
@@ -186,12 +194,13 @@
 	 * Even nicer wrapper that handles key generation and returns the key and 
 	 * ciphertext.
 	 */
-	exports.doEncrypt = function(utf8Plaintext) {
+	exports.generateKeyAndEncrypt = function(utf8Plaintext) {
 		var plaintext = exports.utf8ToBytes(utf8Plaintext);
 		var key = exports.randomByteArray(plaintext.length);
 		var base64Key = exports.bytesToBase64(key);
 		var ciphertext = exports.xorByteArrays(key, plaintext);
-		return {"ciphertext": ciphertext, "key": base64Key};
+		var base64ciphertext = exports.bytesToBase64(ciphertext);
+		return {"ciphertext": base64ciphertext, "key": base64Key};
 	};
 	
 })(typeof exports === 'undefined' ? this.xorotp = {} : exports);

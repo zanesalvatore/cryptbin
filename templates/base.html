@@ -25,7 +25,12 @@
     <div class="container">
         {% block body %}No content defined for body block.{% endblock %}
     </div>
-    
+    <script src="{{ url_for('static', filename='components/jquery/dist/jquery.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='components/bootstrap/dist/js/bootstrap.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='components/base64-js/lib/b64.js') }}"></script>
+    <script src="{{ url_for('static', filename='components/text-encoder-lite/index.js') }}"></script>
+    <script src="{{ url_for('static', filename='xorotp.js') }}"></script>
+    <script src="{{ url_for('static', filename='cryptbin.js') }}"></script>
     {% block footer %}
     {% endblock %}
 </body>
